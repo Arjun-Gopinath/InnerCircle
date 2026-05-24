@@ -1,7 +1,13 @@
 spring:
+  datasource:
+    url: jdbc:postgresql://${TEST_DB_HOST:172.19.80.1}:5432/innercircle
+
   jpa:
     hibernate:
-      ddl-auto: create-drop # let tests build the schema fresh
+      ddl-auto: create-drop
+
+  flyway:
+    enabled: false
 
   kafka:
-    bootstrap-servers: ${spring.embedded.kafka.brokers}
+    bootstrap-servers: ${spring.embedded.kafka.brokers:${TEST_DB_HOST:172.19.80.1}:29092}
