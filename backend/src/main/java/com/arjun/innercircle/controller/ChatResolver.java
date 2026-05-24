@@ -1,5 +1,6 @@
 package com.arjun.innercircle.controller;
 
+import com.arjun.innercircle.config.CurrentUser;
 import com.arjun.innercircle.dto.MessageDto;
 import com.arjun.innercircle.dto.RoomDto;
 import com.arjun.innercircle.model.Message;
@@ -29,7 +30,7 @@ public class ChatResolver {
     private final Sinks.Many<Message> messageSink;
 
     @QueryMapping
-    public List<RoomDto> myRooms(User currentUser) {
+    public List<RoomDto> myRooms(@CurrentUser User currentUser) {
         return roomMemberRepository.findByUserId(currentUser.getId())
                 .stream()
                 .map(member -> RoomDto.from(member.getRoom()))
@@ -45,17 +46,18 @@ public class ChatResolver {
     }
 
     @MutationMapping
-    public RoomDto createRoom(@Argument String name, User currentUser) {
+    public RoomDto createRoom(@Argument String name, @CurrentUser User currentUser) {
         return RoomDto.from(roomService.createRoom(name, currentUser));
     }
 
     @MutationMapping
-    public RoomDto joinRoom(@Argument String inviteKey, User currentUser) {
+    public RoomDto joinRoom(@Argument String inviteKey, @CurrentUser User currentUser) {
         return RoomDto.from(roomService.joinRoom(inviteKey, currentUser));
     }
 
     @MutationMapping
-    public boolean sendMessage(@Argument UUID roomId, @Argument String content, User currentUser) {
+    public boolean sendMessage(@Argument UUID roomId, @Argument String content,
+                               @CurrentUser User currentUser) {
         messageService.sendMessage(roomId, content, currentUser);
         return true;
     }
