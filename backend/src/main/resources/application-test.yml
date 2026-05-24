@@ -1,0 +1,7 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop # let tests build the schema fresh
+
+  kafka:
+    bootstrap-servers: ${spring.embedded.kafka.brokers}
